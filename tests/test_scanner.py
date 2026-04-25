@@ -4,8 +4,6 @@ test_scanner.py — Tests for porthawk.scanner.
 All tests use loopback addresses (127.0.0.1) or mocked sockets so that no
 real network traffic is generated.
 
-TODO: Replace each ``pytest.skip`` call with a real test implementation once
-      the corresponding production code is written.
 """
 
 from __future__ import annotations
