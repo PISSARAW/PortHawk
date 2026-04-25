@@ -35,7 +35,14 @@ def write_json(results: list[dict], filepath: str | Path) -> None:
     filepath:
         Destination file path.  Parent directories are created automatically.
     """
-    raise NotImplementedError
+    if not results:
+        raise ValueError("Results list cannot be empty.")
+    if isinstance(filepath, str):
+        filepath = Path(filepath)
+    if not filepath.parent.exists():
+        filepath.parent.mkdir(parents=True, exist_ok=True)
+    with filepath.open("w", encoding="utf-8") as f:
+        json.dump(results, f, indent=4, ensure_ascii=False)
 
 
 def write_csv(results: list[dict], filepath: str | Path) -> None:
@@ -56,4 +63,14 @@ def write_csv(results: list[dict], filepath: str | Path) -> None:
     ValueError
         If *results* is empty.
     """
-    raise NotImplementedError
+    if not results:
+        raise ValueError("Results list cannot be empty.")
+    if isinstance(filepath, str):
+        filepath = Path(filepath)
+    if not filepath.parent.exists():
+        filepath.parent.mkdir(parents=True, exist_ok=True)
+    with filepath.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=results[0].keys())
+        writer.writeheader()
+        writer.writerows(results)
+

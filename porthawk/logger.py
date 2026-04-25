@@ -42,4 +42,28 @@ def get_logger(
     logging.Logger
         A ready-to-use logger instance.
     """
-    raise NotImplementedError
+    if log_file is not None:
+        log_file = Path(log_file)   
+    if log_file is not None and not log_file.parent.exists():
+        log_file.parent.mkdir(parents=True, exist_ok=True)
+    if log_file is not None and not log_file.exists():
+        log_file.touch(exist_ok=True)
+    if log_file is not None and not log_file.is_file():
+        raise ValueError(f"Log file path {log_file} is not a file.")
+    if log_file is not None and not log_file.is_absolute():
+        log_file = log_file.resolve()
+    else:
+        logger = logging.getLogger(name)
+    logger.setLevel(level)
+    formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    if not logger.hasHandlers():
+        stream_handler = logging.StreamHandler()
+        stream_handler.setLevel(level)
+        stream_handler.setFormatter(formatter)
+        logger.addHandler(stream_handler)
+    if log_file is not None:
+        file_handler = logging.FileHandler(log_file, mode="a")
+        file_handler.setLevel(level)
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
+    return logger
