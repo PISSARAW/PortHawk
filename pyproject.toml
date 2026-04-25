@@ -22,3 +22,9 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.setuptools]
+# Force compat editable mode: generates a simple .pth file instead of a
+# dynamic meta-path finder. Required for Python 3.14+ where .pth files
+# containing `import` statements are no longer executed (PEP 765).
+editable-mode = "compat"
