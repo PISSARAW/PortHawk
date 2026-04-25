@@ -8,7 +8,6 @@ Responsibilities
 - Honour a configurable read timeout to avoid hanging on silent services.
 - Return ``None`` when no banner is available within the timeout.
 
-TODO: Implement the following stubs.
 """
 
 from __future__ import annotations

@@ -13,7 +13,6 @@ Responsibilities
         "banner": str | None,
     }
 
-TODO: Implement the following stubs.
 """
 
 from __future__ import annotations

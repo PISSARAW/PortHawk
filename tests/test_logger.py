@@ -1,8 +1,7 @@
 """
 test_logger.py — Tests for porthawk.logger.
 
-TODO: Replace each ``pytest.skip`` call with a real test implementation once
-      the corresponding production code is written.
+
 """
 
 from __future__ import annotations

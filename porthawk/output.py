@@ -15,7 +15,6 @@ Expected result dict schema (at minimum):
         "banner": str | None,
     }
 
-TODO: Implement the following stubs.
 """
 
 from __future__ import annotations

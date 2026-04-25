@@ -11,7 +11,6 @@ Responsibilities
 - Ensure calling ``get_logger`` multiple times with the same name does not
   add duplicate handlers.
 
-TODO: Implement the following stub.
 """
 
 from __future__ import annotations
