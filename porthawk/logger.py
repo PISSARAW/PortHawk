@@ -42,28 +42,54 @@ def get_logger(
     logging.Logger
         A ready-to-use logger instance.
     """
+    logger = logging.getLogger(name)
+
+    resolved_log_file: Path | None = None
     if log_file is not None:
-        log_file = Path(log_file)   
-    if log_file is not None and not log_file.parent.exists():
-        log_file.parent.mkdir(parents=True, exist_ok=True)
-    if log_file is not None and not log_file.exists():
-        log_file.touch(exist_ok=True)
-    if log_file is not None and not log_file.is_file():
-        raise ValueError(f"Log file path {log_file} is not a file.")
-    if log_file is not None and not log_file.is_absolute():
-        log_file = log_file.resolve()
-    else:
-        logger = logging.getLogger(name)
+        resolved_log_file = Path(log_file).expanduser().resolve()
+        if resolved_log_file.exists() and not resolved_log_file.is_file():
+            raise ValueError(f"Log file path {resolved_log_file} is not a file.")
+        resolved_log_file.parent.mkdir(parents=True, exist_ok=True)
+
     logger.setLevel(level)
     formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-    if not logger.hasHandlers():
+
+    existing_stream_handler = next(
+        (
+            handler
+            for handler in logger.handlers
+            if isinstance(handler, logging.StreamHandler)
+            and not isinstance(handler, logging.FileHandler)
+            and getattr(handler, "_porthawk_stream", False)
+        ),
+        None,
+    )
+
+    if existing_stream_handler is None:
         stream_handler = logging.StreamHandler()
-        stream_handler.setLevel(level)
-        stream_handler.setFormatter(formatter)
+        setattr(stream_handler, "_porthawk_stream", True)
         logger.addHandler(stream_handler)
-    if log_file is not None:
-        file_handler = logging.FileHandler(log_file, mode="a")
-        file_handler.setLevel(level)
-        file_handler.setFormatter(formatter)
-        logger.addHandler(file_handler)
+        existing_stream_handler = stream_handler
+
+    existing_stream_handler.setLevel(level)
+    existing_stream_handler.setFormatter(formatter)
+
+    if resolved_log_file is not None:
+        existing_file_handler = next(
+            (
+                handler
+                for handler in logger.handlers
+                if isinstance(handler, logging.FileHandler)
+                and Path(handler.baseFilename).resolve() == resolved_log_file
+            ),
+            None,
+        )
+        if existing_file_handler is None:
+            file_handler = logging.FileHandler(resolved_log_file, mode="a")
+            logger.addHandler(file_handler)
+            existing_file_handler = file_handler
+
+        existing_file_handler.setLevel(level)
+        existing_file_handler.setFormatter(formatter)
+
     return logger
