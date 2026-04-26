@@ -1,5 +1,14 @@
 # PortHawk
 
+> **A propos de ce projet**
+>
+> PortHawk est un projet personnel, developpe dans un cadre d'apprentissage
+> et d'experimentation. Bien que le depot soit public, il n'est pas destine
+> a un usage general ni a une large audience.
+>
+> Il n'y a pas de garantie de maintenance, de support, ni de stabilite de
+> l'API. Les contributions externes ne sont pas activement sollicitees.
+
 > **Avertissement legal et ethique**
 >
 > PortHawk est un outil educatif. Vous devez scanner uniquement des hotes
